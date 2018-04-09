@@ -1,20 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <%= stylesheet_link_tag    "application" %>
-    <%= javascript_include_tag "application" %>
+    <title>Project2</title>
     <%= csrf_meta_tags %>
-  </head>
 
-  <body>    
-    <div class="row">
-      <div class="container" id="main_content">
-        <%= yield %>
-      </div>
-    </div> 
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  
+  <!-- Theme Made By www.w3schools.com - No Copyright -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+ 
+
+
+
+  <body>
+    
+ <div >
+      <ul class="navul">
+        <!-- OPTIONS FOR EVERYONE -->
+        <li class ="nav"><a class="active" href="https://aelsakka-aelsakka.c9users.io">&#9814</a></li>
+        <li class ="nav"><a><%= link_to 'About Us', aboutus_new_path %></a></li>
+        <li class ="nav"><a><%= link_to 'Our Privacy', privacy_new_path %></a></li>
+        <li class ="nav"><a><%= link_to 'Contact us', contactus_new_path %></a></li>
+    </ul>
+  </div>
+    
+    
+  <div class="footer">
+    <p>Aya El-sakka</p>
+  </div>
+    <%= yield %>
   </body>
-
 </html>

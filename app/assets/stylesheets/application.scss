@@ -10,6 +10,53 @@
  * files in this directory. Styles in this file should be added after the last require_* statement.
  * It is generally better to create a new file per style scope.
  *
+ *= require_tree .
  *= require_self
- *= require overrides
  */
+ 
+ .navul {
+    list-style-type: none;
+    margin: 10px 0 0px 0;
+    padding: 2px ;
+    overflow: hidden;
+    background-color: #333;
+}
+
+.nav {
+    float: left;
+}
+li a {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+li a:hover:not(.active) {
+    background-color: #111;
+}
+
+.active {
+    background-color: #DEB887;
+    font-size: 23px ; 
+}
+
+
+.footer p {
+   position: fixed;
+   padding-top:  10px;
+   left: 0;
+   bottom: 0;
+   width: 100%;
+   background-color: #FFDAB9;
+   color: white;
+   text-align: center;
+ font-family: 'Abril Fatface';font-size: 20px;
+
+}

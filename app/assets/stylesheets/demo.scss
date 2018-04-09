@@ -1,0 +1,92 @@
+body, html {
+    height: 100%;
+    margin: 0;
+}
+.main {
+    background-image: url("http://atgbcentral.com/data/out/59/4426859-chess-wallpaper.jpg");
+    height: 100%; 
+    display: block;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin-bottom: 80px; 
+    text-align: center;
+    opacity: 0.85;
+
+}
+.newform {
+    border: 2px solid #D3D3D3;
+    width: 30%;
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2%;
+    margin-bottom:auto;
+    opacity: 0.85;
+    text-align: center;
+    background-color: #D3D3D3;
+    padding:40px;
+   
+}
+
+.newlabel {
+    font-size: 18px;
+    padding: 5px;
+}
+
+.buttonnew {background-color: #006400;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+input[type=text], input[type=password],input[type=email] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+.font1{
+ font-family: times, Times New Roman, times-roman, georgia, serif;
+ color: white;
+ margin: 0;
+ padding: 60px ; 
+ font-size: 51px;
+ line-height: 44px;
+ letter-spacing: -2px;
+ font-weight: bold;
+ text-align: left ; 
+}
+.font2{
+ font-family: times, Times New Roman, times-roman, georgia, serif;
+ color: white;
+ padding: 0px ; 
+ font-size: 18px;
+ letter-spacing: 0px;
+ margin-left : 140px;
+ text-align: left ; 
+}
+.button {
+    background-color: #DEB887; 
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 4px 2px;
+    cursor: pointer;
+ margin-right:700px;
+ 
+}
+.button1 {width: 250px;}
+
+.button1 hover {color: brown}

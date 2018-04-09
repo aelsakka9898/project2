@@ -1,0 +1,41 @@
+<p id="notice"><%= notice %></p>
+
+<h2>Curriculums</h2>
+<%= link_to 'New Curriculum', new_curriculum_path %>
+
+<table id="myTable">
+  <input type="text" id="myInput" onkeyup="myFunctioncurriculum()" placeholder="Search by Name" title="Type In Name">
+  
+  <thead>
+    <tr>
+      <th id= "myTablehead">Name</th>
+      <th id= "myTablehead">Min rating</th>
+      <th id= "myTablehead">Max rating</th>
+      <th id= "myTablehead">Description</th>
+      <th id= "myTablehead">Active</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @curriculums.each do |curriculum| %>
+      <tr>
+        <td><%= curriculum.name %></td>
+        <td><%= curriculum.min_rating %></td>
+        <td><%= curriculum.max_rating %></td>
+        <td><%= curriculum.description %></td>
+        <td><%= curriculum.active %></td>
+        <td><%= link_to 'Show', curriculum %></td>
+        <td><%= link_to 'Edit', edit_curriculum_path(curriculum) %></td>
+        <td><%= link_to 'Destroy', curriculum, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+
+
+
+

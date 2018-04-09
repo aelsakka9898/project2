@@ -1,5 +1,6 @@
 FactoryBot.define do
-  
+
+
   factory :curriculum do
     name "Mastering Chess Tactics"
     description "This camp is designed for any student who has mastered basic mating patterns and understands opening principles and is looking to improve his/her ability use chess tactics in game situations."
