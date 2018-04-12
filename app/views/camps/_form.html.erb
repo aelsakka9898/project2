@@ -1,66 +1,38 @@
 <div class="form-style-8main" >
 <div class="form-style-8">
-<%= form_with(model: camp, local: true) do |form| %>
-  <% if camp.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(camp.errors.count, "error") %> prohibited this camp from being saved:</h2>
+<%= simple_form_for(@camp) do |f| %>
+  <%= f.error_notification %>
+  <div class="row">
+<div class="form-style-8">
 
-      <ul>
-      <% camp.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
+      <%= f.input :location_id, collection: Location.alphabetical.active.to_a, include_blank: true %>
+      <%= f.input :curriculum_id, collection: Curriculum.alphabetical.active.to_a, include_blank: true %>
+      <%= f.input :cost, label_html: { class: 'active' } %>
+      <%= f.input :time_slot, collection: [["Morning","am"],["Afternoon","pm"]], include_blank: true %>
+      
+      <%= f.date_select :start_date, label_html: { class: 'active'} %>
+      <%= f.label :start_date %>
+      <%= f.date_select :end_date, label_html: { class: 'active'} %>
+       <%= f.label :end_date %>
+      <%= f.input :max_students, label_html: { class: 'active' } %>
+      <%= f.input :active %>
+	  <%# f.input :active, as: :radio_buttons %>
     </div>
-  <% end %>
-
-  <div class="field">
-    <%= form.label :curriculum_id %>
-    <%= form.number_field :curriculum_id, id: :camp_curriculum_id %>
   </div>
-
-  <div class="field">
-    <%= form.label :location_id %>
-    <%= form.number_field :location_id, id: :camp_location_id %>
-  </div>
-
-  <div class="field">
-    <%= form.label :cost %>
-    <%= form.text_field :cost, id: :camp_cost %>
-  </div>
-
-  <div class="field">
-    <%= form.label :start_date %>
-    <%= form.date_select :start_date, id: :camp_start_date %>
-  </div>
-
-  <div class="field">
-    <%= form.label :end_date %>
-    <%= form.date_select :end_date, id: :camp_end_date %>
-  </div>
-
-  <div class="field">
-    <%= form.label :time_slot %>
-    <%= form.text_field :time_slot, id: :camp_time_slot %>
-  </div>
-
-  <div class="field">
-    <%= form.label :max_students %>
-    <%= form.number_field :max_students, id: :camp_max_students %>
-  </div>
-
-  <div class="field">
-    <%= form.label :active %>
-    <%= form.check_box :active, id: :camp_active %>
-    <% if Camp.active == false %>
-     <%= puts "Dd" %>
-    <% self.camp_instructor.instructor_id == nil %>
-    <%end%>
-    
-  </div>
-
-  <div class="actions">
-    <%= form.submit %>
+  <div class="row">
+    <div class="form-actions col s8">
+      <%= f.button :submit %>
+    </div>
   </div>
 <% end %>
-</div>
-</div>
+
+
+  <!--times = @camp.time_slot == "am" ? [["Morning", "am"], ["Afternoon", "pm"]] : [["Afternoon", "pm"], ["Morning", "am"]]
+      <%# f.select :time_slot, times, :prompt => "Select Time of Day..." %>-->
+
+      
+      
+      
+      
+      
+

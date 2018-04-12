@@ -1,32 +1,22 @@
 <div class="form-style-8main" >
 <div class="form-style-8">
-<%= form_with(model: camp_instructor, local: true) do |form| %>
-  <% if camp_instructor.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(camp_instructor.errors.count, "error") %> prohibited this camp_instructor from being saved:</h2>
-
-      <ul>
-      <% camp_instructor.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="field">
-    <%= form.label :camp_id %>
-    <%= form.number_field :camp_id, id: :camp_instructor_camp_id %>
+    <h4>New Instructor for <%= @camp.name %>:</h4>
+    <%= simple_form_for(@camp_instructor) do |f| %>
+      <%= f.error_notification %>
+      <div class="row">
+        <div class="form-inputs">
+          <%= f.input :instructor_id, collection: Instructor.active.alphabetical.to_a, include_blank: true %>
+          <%= f.input :camp_id, as: :hidden, input_html: { value: @camp.id } %>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-actions col s8">
+          <%= f.button :submit %>
+        </div>
+      </div>
+    <% end %>
   </div>
-
-  <div class="field">
-    <%= form.label :instructor_id %>
-    <%= form.number_field :instructor_id, id: :camp_instructor_instructor_id %>
+  <div class="col s4">
+    <%= render :partial => "other_instructors" %>
   </div>
-
-  <div class="actions">
-    <%= form.submit %>
-  </div>
-<% end %>
-</div>
-  
 </div>

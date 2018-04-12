@@ -20,6 +20,10 @@ Rails.application.routes.draw do
   get 'privacy/new' 
   get 'contactus/new' 
   root to: 'demo#new'
+  
+  get 'about', to: 'aboutus#new'
+  get 'privacy', to: 'privacy#new'
+  get 'contact', to: 'contactus#new'
 
 
 

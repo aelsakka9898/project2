@@ -1,0 +1,12 @@
+<div class="expert">
+    <h4>Other Instructors</h4>
+    <% if @other_instructors.empty? %>
+      <p>No other instructors assigned at this time</p>
+    <% else %>
+      <ul>
+        <% for instructor in @other_instructors %>
+          <li><%= link_to instructor.proper_name, instructor_path(instructor) %></li>
+        <% end %>
+      </ul>
+    <% end %>
+</div>

@@ -8,7 +8,7 @@ class Location < ApplicationRecord
   # validations
   validates :name, presence: true, uniqueness: { case_sensitive: false }
   validates :street_1, presence: true
-  validates :state, inclusion: { in: STATES_LIST.map{|a,b| b}, message: "is not valid state", allow_blank: true }
+  #validates :state, inclusion: { in: STATES_LIST.map{|a,b| b}, message: "is not valid state", allow_blank: true }
   validates :zip, presence: true, format: { with: /\A\d{5}\z/, message: "should be five digits long", allow_blank: true }
   validates :max_capacity, presence: true, numericality: { only_integer: true, greater_than: 0, allow_blank: true }
   

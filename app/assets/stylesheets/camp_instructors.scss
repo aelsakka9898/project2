@@ -11,7 +11,6 @@ body, html {
     background-size: cover;
     margin-bottom: 80px; 
     opacity: 0.70;
-
 }
 
 .form-style-8{
@@ -147,7 +146,20 @@ body, html {
 
 .showdiv {
     top: 30%;
-    left: 30%;
+    right: 30%;
+    position: absolute;
+    text-align: center ;
+    background-color: #FFDAB9;
+    width: 500px;
+    border: 15px solid #8B4513;
+    padding: 30px ;
+    margin: 0px;
+}
+
+
+.showdiv2 {
+    top: 75%;
+    right: 30.9%;
     position: absolute;
     text-align: center ;
     background-color: #FFDAB9;
