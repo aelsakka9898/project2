@@ -4,11 +4,17 @@ class FamilyTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end
-  # test relationships
+  # Test relationships
   should have_many(:students)
   should belong_to(:user)
   
+  #Test validations
   
+  should allow_value("Elsakka").for(:family_name)
+  should allow_value("Ali").for(:parent_first_name)
+  should allow_value(1).for(:user_id)
+  should allow_value(true).for(:active)
+
   ##CALL BACK TEST
 
     should "not delete family" do

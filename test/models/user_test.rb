@@ -54,5 +54,8 @@ class UserTest < ActiveSupport::TestCase
   
   #PASSWORD VALIDATION
   should have_secure_password
+  
+
+ 
 
 end

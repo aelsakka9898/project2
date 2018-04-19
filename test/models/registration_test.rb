@@ -15,6 +15,12 @@ class RegistrationTest < ActiveSupport::TestCase
   should belong_to (:student)
 
 
+  #validation tests 
+  should allow_value(1).for(:camp_id)
+  should allow_value(3).for(:student_id)
+  should allow_value("ENCODED@#").for(:payment)
+
+
   context "Within context" do
     setup do 
       create_registrations
