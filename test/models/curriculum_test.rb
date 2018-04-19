@@ -30,14 +30,17 @@ class CurriculumTest < ActiveSupport::TestCase
   should_not allow_value(-1).for(:max_rating)
   should_not allow_value(500.50).for(:max_rating)
   should_not allow_value("bad").for(:max_rating)
+  
+  
 
-    # test that max greater than min rating
-  should "shows that max rating is greater than min rating" do
-    bad = FactoryBot.build(:curriculum, name: "Bad curriculum", min_rating: 500, max_rating: 500)
-    very_bad = FactoryBot.build(:curriculum, name: "Very bad curriculum", min_rating: 500, max_rating: 450)
-    deny bad.valid?
-    deny very_bad.valid?
-  end
+
+  # test that max greater than min rating
+      should "shows that max rating is greater than min rating" do
+        bad = FactoryBot.build(:curriculum, name: "Bad curriculum", min_rating: 500, max_rating: 500)
+        very_bad = FactoryBot.build(:curriculum, name: "Very bad curriculum", min_rating: 500, max_rating: 450)
+        deny bad.valid?
+        deny very_bad.valid?
+      end
 
   context "Within context" do
     # create the objects I want with factories
@@ -72,6 +75,28 @@ class CurriculumTest < ActiveSupport::TestCase
       assert_equal 1, Curriculum.for_rating(1400).size
       assert_equal ["Mastering Chess Tactics","Smith-Morra Gambit"], Curriculum.for_rating(600).all.map(&:name).sort
     end
+    
+    
+    should "never allow destroying a curriculum" do
+      endgames   = FactoryBot.create(:curriculum, name: "Game", min_rating: 700, max_rating: 1500)
+      assert ActiveRecord::Rollback , endgames.destroy
+    end
+    
+        
+    should "never allow inactive curriculum if associated to camp that has registrations" do
+      endgames   = FactoryBot.create(:curriculum, name: "Game2", min_rating: 700, max_rating: 1500)
+      cmu = FactoryBot.create(:location) 
+      camp1 = FactoryBot.create(:camp, curriculum: endgames, location: cmu) 
+      yabdelaa = FactoryBot.create(:user, username:"yabdelaa" , role:"admin" , email: "yabdelaal@hotmail.com" , phone:"9999999999" ,  password:"12345" , password_confirmation:"12345")
+      abdelaal = FactoryBot.create(:family, family_name: "Abdelaal" , parent_first_name: "Hassan" , user:  yabdelaa, active:true)
+      yasmin = FactoryBot.create(:student, first_name: "Yasmin", last_name:"Abdelaal" , family_id: 1, date_of_birth: "13/04/1998" , rating: 1)
+      reg2   = FactoryBot.create(:registration, camp: camp1 , student: yasmin )
+      endgames.active = false
+      endgames.save 
+      assert ActiveRecord::Rollback , endgames.active
+    end
 
+    
+    
   end
 end

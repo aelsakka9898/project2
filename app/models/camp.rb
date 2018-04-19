@@ -4,6 +4,15 @@ class Camp < ApplicationRecord
   belongs_to :location
   has_many :camp_instructors
   has_many :instructors, through: :camp_instructors
+  has_many :registrations
+  has_many :students , through: :registrations
+  
+  #callbacks
+  before_update :inactive_camps
+  before_update :remove_instructors_from_inactive_camp
+  before_destroy :destroy_camp
+  
+  
 
   # validations
   validates_presence_of :location_id, :curriculum_id, :time_slot, :start_date
@@ -27,8 +36,11 @@ class Camp < ApplicationRecord
   scope :upcoming, -> { where('start_date >= ?', Date.today) }
   scope :past, -> { where('end_date < ?', Date.today) }
   scope :for_curriculum, ->(curriculum_id) { where("curriculum_id = ?", curriculum_id) }
+
+  scope :full, -> { joins(:registrations).where("max_students = ?",  Registration.find_by(camp_id: self.ids)) }
+  scope :empty, -> { joins(:registrations).where("true =?" , Registration.find_by(camp_id: self.ids)).nil? }
   
-    # instance methods
+  # instance methods
   def name
     self.curriculum.name
   end
@@ -36,9 +48,44 @@ class Camp < ApplicationRecord
   def already_exists?
     Camp.where(time_slot: self.time_slot, start_date: self.start_date, location_id: self.location_id).size == 1
   end
+  
+  
+  def is_full? 
+    q = 0 
+    if self.registrations.count > 0 
+      self.registrations.each do |x|
+        q = q+1
+      end 
+      if q == self.max_students
+        true 
+      else
+        false
+      end
+    else
+      false
+    end 
+  end 
+  
+  
+  
+  
+  def enrollment 
+    q = 0 
+    if self.registrations.count > 0 
+      self.registrations.each do |x|
+        q = q+1
+      end 
+        q 
+      else
+        0
+    end 
+  end 
 
-  # callbacks
-  before_update :remove_instructors_from_inactive_camp
+
+
+  
+  
+
 
   # private
   def curriculum_is_active_in_the_system
@@ -57,6 +104,10 @@ class Camp < ApplicationRecord
       errors.add(:time_slot, "already exists for start date, time slot and location")
     end
   end
+  
+  
+
+  
 
   def max_students_not_greater_than_capacity
     return true if self.max_students.nil? || self.location_id.nil?
@@ -71,4 +122,45 @@ class Camp < ApplicationRecord
       self.camp_instructors.each{|ci| ci.destroy}
     end
   end
-end
+  
+  
+  def inactive_camps
+    num=0 
+    registrations.each do |x|
+      if x.camp_id == self.id 
+        num = num+1
+        self.active = true 
+        raise ActiveRecord::Rollback
+      end 
+    end
+    if num == 0 
+      self.active = false 
+    end 
+    
+  end
+  
+  
+  def destroy_camp
+    q=0
+    self.registrations.each do |x|
+      if x.camp_id == self.id 
+        q = q+1 
+      end 
+    end 
+    if q > 0 
+      raise ActiveRecord::Rollback
+    else
+      self.destroy
+      self.camp_instructors.each do |y|
+        if y.camp_id == self.id 
+           y.camp_id = nil 
+        end 
+      end 
+    end 
+  end 
+
+
+  
+
+
+end 

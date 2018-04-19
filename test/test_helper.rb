@@ -9,6 +9,7 @@ require 'minitest/reporters'
 require 'minitest_extensions'
 require 'contexts'
 
+
 class ActiveSupport::TestCase
   # Add more helper methods to be used by all tests here...
   include Contexts

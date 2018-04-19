@@ -1,6 +1,7 @@
 class Curriculum < ApplicationRecord
   # relationships
   has_many :camps
+  
 
   # validations
   validates :name, presence: true, uniqueness: { case_sensitive: false }
@@ -16,6 +17,11 @@ class Curriculum < ApplicationRecord
   scope :for_rating, ->(rating) { where("min_rating <= ? and max_rating >= ?", rating, rating) }
 
 
+
+  #Callbacks
+  before_destroy :raise_rollback!
+  before_update :active_validation
+
   private
   def max_rating_greater_than_min_rating
     # only testing 'greater than' in this method, so...
@@ -24,6 +30,28 @@ class Curriculum < ApplicationRecord
       errors.add(:max_rating, "must be greater than the minimum rating")
     end
   end
+  
+  def raise_rollback!
+    raise ActiveRecord::Rollback
+  end
+  
+  
+  
+  def active_validation
+    self.camps.each do |x|
+      if self.id == x.curriculum_id
+        x.registrations.each do |y|
+          if y.camp_id == x.id
+            ActiveRecord::Rollback
+          end 
+        end 
+      end 
+    end 
+    self.active = false
+  end 
+
+
+
 
 
 end

@@ -1,0 +1,17 @@
+<%= simple_form_for(@registration) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.input :camp_id %>
+    <%= f.input :student_id %>
+    <%= f.input :payment %>
+    <%= f.input :number %>
+    <%= f.input :type %>
+    <%= f.input :month %>
+    <%= f.input :year %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>

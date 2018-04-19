@@ -1,5 +1,8 @@
 class CurriculumsController < ApplicationController
-  before_action :set_curriculum, only: [:show, :edit, :update, :destroy]
+  before_action :set_curriculum, only: [:show, :edit, :update]
+  before_destroy :valid?
+
+
 
   def index
     @curriculums = Curriculum.all
@@ -36,8 +39,8 @@ class CurriculumsController < ApplicationController
   end
 
   def destroy
-    @curriculum.destroy
-    redirect_to curriculums_url, notice: "#{@curriculum.name} was removed from the system."
+   before_action	:remove_profile_data
+    raise  "#{@curriculum.name} cannot be removed from the system."
   end
 
   private
@@ -48,4 +51,9 @@ class CurriculumsController < ApplicationController
     def curriculum_params
       params.require(:curriculum).permit(:name, :description, :min_rating, :max_rating, :active)
     end
-end
+    
+     
+    
+
+
+end 

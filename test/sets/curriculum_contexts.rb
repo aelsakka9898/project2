@@ -29,5 +29,11 @@ module Contexts
       @adv_tactics.delete
       @openings.delete
     end
+    
+    
+      
+    
+    
+    
   end
 end

@@ -1,4 +1,35 @@
 FactoryBot.define do
+  factory :user do
+    username "aelsakka"
+    role "PA"
+    email "aelsakka@hotmail.com"
+    password "12344"
+     password_confirmation "12344"
+    phone "9999999999"
+    active true
+  end
+  
+
+  factory :student do
+    first_name "Aya"
+    last_name "Elsakka"
+    family_id 1
+    date_of_birth "2018-04-13"
+    rating 1
+    active true
+  end
+  factory :registration do
+    camp_id 1
+    student_id 1
+    payment nil
+  end
+  
+  factory :family do
+    family_name "Elsakka"
+    parent_first_name "ali"
+    user_id 1
+    active true
+  end
 
 
   factory :curriculum do
@@ -15,6 +46,7 @@ FactoryBot.define do
     bio "Mark is currently among the top 150 players in the United States and has won 4 national scholastic chess championships."
     phone { rand(10 ** 10).to_s.rjust(10,'0') }
     email { |i| "#{i.first_name[0]}#{i.last_name}#{(1..99).to_a.sample}@example.com".downcase }
+    user_id 1 
     active true
   end
   

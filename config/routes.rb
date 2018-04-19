@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  resources :users
+  resources :students
+  resources :registrations
+  resources :families
   get 'demo/new'
 
   resources :locations

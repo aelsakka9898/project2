@@ -54,6 +54,15 @@ class LocationTest < ActiveSupport::TestCase
       assert_equal ["Squirrel Hill"], Location.inactive.all.map(&:name).sort
       delete_inactive_locations
     end
+    
+    
+    should "not delete location if used by camp previously" do
+      ec = FactoryBot.create(:location , name: "ec") 
+      tactics    = FactoryBot.create(:curriculum)
+      camp1 = FactoryBot.create(:camp, curriculum: tactics, location: ec)  
+      assert   ActiveRecord::Rollback , ec.destroy  
+      
+  end 
 
   end
 end

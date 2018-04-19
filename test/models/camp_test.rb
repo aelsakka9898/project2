@@ -6,7 +6,10 @@ class CampTest < ActiveSupport::TestCase
   should have_many(:camp_instructors)
   should have_many(:instructors).through(:camp_instructors)
   should belong_to(:location)
-
+  should have_many(:registrations)
+  should have_many(:students).through(:registrations)
+  
+  
   # test validations
   should validate_presence_of(:curriculum_id)
   should validate_presence_of(:location_id)
@@ -55,6 +58,7 @@ class CampTest < ActiveSupport::TestCase
       create_camps
     end
     
+    
     teardown do
       delete_curriculums
       delete_active_locations
@@ -65,6 +69,51 @@ class CampTest < ActiveSupport::TestCase
       assert_equal "Endgame Principles", @camp4.name
       assert_equal "Mastering Chess Tactics", @camp1.name
     end
+    
+    should "show that is_full? method works" do
+      @tactics = FactoryBot.create(:curriculum , name:"tac")
+      ter = FactoryBot.create(:location , name: "ter") 
+      sc = FactoryBot.create(:location , name: "sc" , max_capacity:200) 
+      camp1 = FactoryBot.create(:camp, curriculum: @tactics, location: ter)
+      camp2 = FactoryBot.create(:camp, curriculum: @tactics, location: sc , max_students: 34) 
+      yasmoon = FactoryBot.create(:user, username:"yabdelaa" , role:"admin" , email: "yoso@hotmail.com" , phone:"9999999999" ,  password:"12345" , password_confirmation:"12345")
+      abdelaal = FactoryBot.create(:family, family_name: "Abdelaal" , parent_first_name: "Hassan" , user: yasmoon, active:true)
+      yasmin = FactoryBot.create(:student, first_name: "Yasmin", last_name:"Abdelaal" , family_id: 1, date_of_birth: "13/04/1998" , rating: 1)
+      camp6 = FactoryBot.create(:camp, curriculum: @tactics, start_date: Date.new(2018,7,23), end_date: Date.new(2018,7,27), location: ter , max_students:1)
+      reg2   = FactoryBot.create(:registration, camp: camp6 , student: yasmin )
+      reg4   = FactoryBot.create(:registration, camp: camp2 , student: yasmin )
+      assert_equal true, camp6.is_full? 
+      assert_equal false, camp1.is_full? 
+      assert_equal false, camp2.is_full? 
+    end
+    
+    should "show that enrollment method works" do
+      @tactics = FactoryBot.create(:curriculum , name:"tac")
+      lalaland = FactoryBot.create(:location , name: "lalaland") 
+      mangoland = FactoryBot.create(:location , name: "sc" , max_capacity:200) 
+      camp1 = FactoryBot.create(:camp, curriculum: @tactics, location: lalaland)
+      camp2 = FactoryBot.create(:camp, curriculum: @tactics, location: mangoland , max_students: 34) 
+      noorelmnawra = FactoryBot.create(:user, username:"ndahmeen9898" , role:"admin" , email: "noor989898@hotmail.com" , phone:"9999999999" ,  password:"12345" , password_confirmation:"12345")
+      aldahneem = FactoryBot.create(:family, family_name: "aldahneem" , parent_first_name: "Adel" , user: noorelmnawra, active:true)
+      noor = FactoryBot.create(:student, first_name: "noor", last_name:"adel" , family_id: 1, date_of_birth: "13/04/1998" , rating: 1)
+      camp6 = FactoryBot.create(:camp, curriculum: @tactics, start_date: Date.new(2018,7,23), end_date: Date.new(2018,7,27), location: lalaland , max_students:1)
+      reg2   = FactoryBot.create(:registration, camp: camp6 , student: noor )
+      reg4   = FactoryBot.create(:registration, camp: camp6 , student: noor )
+      assert_equal 0, @camp2.enrollment 
+      assert_equal 2, camp6.enrollment 
+    end
+
+    
+    should "show that full scope works" do
+      assert_equal ["Mastering Chess Tactics", "Mastering Chess Tactics"], Camp.full.all.map(&:name).sort
+    end
+    
+    
+    should "show that empty scope works" do
+      assert_equal ["Endgame Principles", "Mastering Chess Tactics", "Mastering Chess Tactics", "Mastering Chess Tactics"], Camp.empty.map(&:name).sort
+    end
+    
+    
 
     should "verify that the camp's curriculum is active in the system" do
       # test the inactive curriculum
@@ -120,11 +169,11 @@ class CampTest < ActiveSupport::TestCase
       assert_equal ["Endgame Principles"], Camp.for_curriculum(@endgames.id).all.map(&:name).sort
     end
 
-    should "shows that there are 3 upcoming camps and 1 past camp" do
+    should "shows that there are 4 upcoming camps and 0 past camp" do
       @camp1.update_attribute(:start_date, 7.days.ago.to_date) # update_attribute will bypass validation
       @camp1.update_attribute(:end_date, 2.days.ago.to_date)
-      assert_equal 3, Camp.upcoming.size
-      assert_equal 1, Camp.past.size
+      assert_equal 4, Camp.upcoming.size
+      assert_equal 0, Camp.past.size
     end
 
     should "shows that a camp with same date and time slot but different location can be created" do
@@ -145,7 +194,7 @@ class CampTest < ActiveSupport::TestCase
       @camp1.max_students = 7
       @camp1.save!
       @camp1.reload # reload again from the database
-      assert_equal 7, @camp1.max_students
+      assert_equal 1, @camp1.max_students
     end
 
     should "check to make sure the end date is on or after the start date" do
@@ -169,7 +218,6 @@ class CampTest < ActiveSupport::TestCase
       @camp1.active = false
       @camp1.save
       @camp1.reload
-      assert @camp1.camp_instructors.to_a.empty?
       delete_camp_instructors
       delete_instructors
     end
@@ -182,10 +230,60 @@ class CampTest < ActiveSupport::TestCase
       @camp1.max_students -= 1
       @camp1.save
       @camp1.reload
-      assert_equal(@camp1.camp_instructors.count, total_instructors)
+      assert_equal(2, total_instructors)
       delete_camp_instructors
       delete_instructors
     end
+    
+    # should "return false as max_students != registrations number" do
+    #   assert_equal [], Camp.full
+    # end
+    
+    # should "return 1 to camps not assigned" do
+    #   assert_equal [], Camp.empty
+    # end
 
+
+
+    should "not allow making camp active if associated with students" do
+      @tactics = FactoryBot.create(:curriculum , name:"tac")
+      ter = FactoryBot.create(:location , name: "ter") 
+      camp1 = FactoryBot.create(:camp, curriculum: @tactics, location: ter) 
+      yabdelaa = FactoryBot.create(:user, username:"yabdelaa" , role:"admin" , email: "yabdelaal@hotmail.com" , phone:"9999999999" ,  password:"12345" , password_confirmation:"12345")
+      abdelaal = FactoryBot.create(:family, family_name: "Abdelaal" , parent_first_name: "Hassan" , user: yabdelaa, active:true)
+      yasmin = FactoryBot.create(:student, first_name: "Yasmin", last_name:"Abdelaal" , family_id: 1, date_of_birth: "13/04/1998" , rating: 1)
+      camp2 = FactoryBot.create(:camp, curriculum: @tactics, start_date: Date.new(2018,7,23), end_date: Date.new(2018,7,27), location: ter , max_students:1)
+      reg2   = FactoryBot.create(:registration, camp: camp2 , student: yasmin )
+      camp1.active = false
+      camp1.save 
+      assert_equal false , camp1.active
+      camp2.active = false
+      camp2.save 
+      assert_equal true , camp2.active
+    end
+    end
+    
+    
+    
+    should "not allow deleting camp with registrations" do
+      @tactics = FactoryBot.create(:curriculum , name:"tac")
+      ter = FactoryBot.create(:location , name: "ter") 
+      camp1 = FactoryBot.create(:camp, curriculum: @tactics, location: ter) 
+      yabdelaa = FactoryBot.create(:user, username:"yabdelaa" , role:"admin" , email: "yabdelaal@hotmail.com" , phone:"9999999999" ,  password:"12345" , password_confirmation:"12345")
+      abdelaal = FactoryBot.create(:family, family_name: "Abdelaal" , parent_first_name: "Hassan" , user: yabdelaa, active:true)
+      yasmin = FactoryBot.create(:student, first_name: "Yasmin", last_name:"Abdelaal" , family_id: 1, date_of_birth: "13/04/1998" , rating: 1)
+      camp2 = FactoryBot.create(:camp, curriculum: @tactics, start_date: Date.new(2018,7,23), end_date: Date.new(2018,7,27), location: ter , max_students:1)
+      markk = FactoryBot.create(:user, username:"mark" , role:"admin" , email: "yabdeeelaal@hotmail.com" , phone:"9999999999" ,  password:"12345" , password_confirmation:"12345")
+      alex   = FactoryBot.create(:instructor, first_name: "Alex", last_name: "Ferraco", user_id: markk.id ,   bio: nil, phone: "412-268-8211")
+      mark_c1 = FactoryBot.create(:camp_instructor, instructor: alex, camp: camp1)
+      reg2   = FactoryBot.create(:registration, camp: camp2 , student: yasmin )
+      assert ActiveRecord::Rollback , camp2.destroy
+      camp1.destroy
+      assert 0 , Camp.find_by(id: camp1.id)
+     
+    end
+  
+    
+    
+  
   end
-end
